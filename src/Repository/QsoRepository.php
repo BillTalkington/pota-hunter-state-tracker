@@ -16,6 +16,15 @@ class QsoRepository extends ServiceEntityRepository
         parent::__construct($registry, Qso::class);
     }
 
+    public function getWorkedStateCounts(): array
+    {
+        return $this->createQueryBuilder('q')
+            ->select('q.state AS state')
+            ->addSelect('COUNT(q.id) AS qsoCount')
+            ->groupBy('q.state')
+            ->getQuery()
+            ->getResult();
+    }
 //    /**
 //     * @return Qso[] Returns an array of Qso objects
 //     */
