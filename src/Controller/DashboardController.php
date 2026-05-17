@@ -21,20 +21,27 @@ final class DashboardController extends AbstractController
             $workedMap[$row['state']->value] = (int) $row['qsoCount'];
         }
 
-        $states = [];
+        $workedStates = [];
+        $neededStates = [];
 
         foreach (State::cases() as $state) {
             $count = $workedMap[$state->value] ?? 0;
 
-            $states[] = [
+            $stateData = [
                 'state' => $state,
-                'worked' => $count > 0,
                 'count' => $count,
             ];
+
+            if ($count > 0) {
+                $workedStates[] = $stateData;
+            } else {
+                $neededStates[] = $stateData;
+            }
         }
 
         return $this->render('dashboard/index.html.twig', [
-            'states' => $states,
+            'workedStates' => $workedStates,
+            'neededStates' => $neededStates,
         ]);
     }
 }
