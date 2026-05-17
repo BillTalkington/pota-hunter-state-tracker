@@ -18,3 +18,8 @@
 /public/assets/
 /assets/vendor/
 ###< symfony/asset-mapper ###
+
+###> IDEA files ###
+.idea/
+*.iml
+###< IDEA files ###
