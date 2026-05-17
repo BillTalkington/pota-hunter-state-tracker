@@ -30,7 +30,7 @@ class Qso
     private ?string $mode = null;
 
     #[ORM\Column(nullable: true)]
-    private ?\DateTime $contactedAt = null;
+    private ?\DateTimeImmutable $contactedAt = null;
 
     public function getId(): ?int
     {
@@ -97,12 +97,12 @@ class Qso
         return $this;
     }
 
-    public function getContactedAt(): ?\DateTime
+    public function getContactedAt(): ?\DateTimeImmutable
     {
         return $this->contactedAt;
     }
 
-    public function setContactedAt(?\DateTime $contactedAt): static
+    public function setContactedAt(?\DateTimeImmutable $contactedAt): static
     {
         $this->contactedAt = $contactedAt;
 
