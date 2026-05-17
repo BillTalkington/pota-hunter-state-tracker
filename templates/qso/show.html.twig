@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Qso{% endblock %}
+
+{% block body %}
+    <h1>Qso</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ qso.id }}</td>
+            </tr>
+            <tr>
+                <th>ActivatorCallsign</th>
+                <td>{{ qso.activatorCallsign }}</td>
+            </tr>
+            <tr>
+                <th>ParkReference</th>
+                <td>{{ qso.parkReference }}</td>
+            </tr>
+            <tr>
+                <th>State</th>
+                <td>{{ qso.state.value }}</td>
+            </tr>
+            <tr>
+                <th>Band</th>
+                <td>{{ qso.band }}</td>
+            </tr>
+            <tr>
+                <th>Mode</th>
+                <td>{{ qso.mode }}</td>
+            </tr>
+            <tr>
+                <th>ContactedAt</th>
+                <td>{{ qso.contactedAt ? qso.contactedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_qso_index') }}">back to list</a>
+
+    <a href="{{ path('app_qso_edit', {'id': qso.id}) }}">edit</a>
+
+    {{ include('qso/_delete_form.html.twig') }}
+{% endblock %}

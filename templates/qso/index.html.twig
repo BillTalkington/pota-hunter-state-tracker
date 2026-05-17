@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Qso index{% endblock %}
+
+{% block body %}
+    <h1>Qso index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>ActivatorCallsign</th>
+                <th>ParkReference</th>
+                <th>State</th>
+                <th>Band</th>
+                <th>Mode</th>
+                <th>ContactedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for qso in qsos %}
+            <tr>
+                <td>{{ qso.id }}</td>
+                <td>{{ qso.activatorCallsign }}</td>
+                <td>{{ qso.parkReference }}</td>
+                <td>{{ qso.state.value }}</td>
+                <td>{{ qso.band }}</td>
+                <td>{{ qso.mode }}</td>
+                <td>{{ qso.contactedAt ? qso.contactedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_qso_show', {'id': qso.id}) }}">show</a>
+                    <a href="{{ path('app_qso_edit', {'id': qso.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_qso_new') }}">Create new</a>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Qso{% endblock %}
+
+{% block body %}
+    <h1>Edit Qso</h1>
+
+    {{ include('qso/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_qso_index') }}">back to list</a>
+
+    {{ include('qso/_delete_form.html.twig') }}
+{% endblock %}

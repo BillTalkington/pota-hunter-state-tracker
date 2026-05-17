@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Qso{% endblock %}
+
+{% block body %}
+    <h1>Create new Qso</h1>
+
+    {{ include('qso/_form.html.twig') }}
+
+    <a href="{{ path('app_qso_index') }}">back to list</a>
+{% endblock %}
