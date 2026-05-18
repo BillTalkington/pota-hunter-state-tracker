@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Repository\QsoRepository;
 use App\Enum\State;
+use App\Service\PotaSpotService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -11,8 +12,9 @@ use Symfony\Component\Routing\Attribute\Route;
 final class DashboardController extends AbstractController
 {
     #[Route('/', name: 'app_dashboard')]
-    public function index(QsoRepository $qsoRepository): Response
+    public function index(QsoRepository $qsoRepository, PotaSpotService $potaSpotService): Response
     {
+        // Calculate which states have been worked already and which are still needed
         $workedCounts = $qsoRepository->getWorkedStateCounts();
 
         $workedMap = [];
@@ -39,9 +41,18 @@ final class DashboardController extends AbstractController
             }
         }
 
+        // Get current POTA spots
+        $spots = $potaSpotService->getCurrentSpots();
+
+        foreach ($spots as &$spot) {
+            $spot['needed'] = !isset($workedMap[$spot['state']->value]);
+        }
+        unset($spot);
+
         return $this->render('dashboard/index.html.twig', [
             'workedStates' => $workedStates,
             'neededStates' => $neededStates,
+            'spots' => $spots,
         ]);
     }
 }
