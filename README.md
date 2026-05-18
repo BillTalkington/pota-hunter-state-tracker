@@ -23,3 +23,5 @@ ddev exec php bin/console doctrine:migrations:migrate
 ```
 
 For right now, the POTA spot API is hit with every refresh; one of my next additions would be regular polling that dynamically updates the dashboard. Along with design changes that add _any_ design and more information about the respective spots in the "Needed" list (i.e. park reference, time since last spot, etc.).
+
+<img width="800" height="905" alt="POTA-hunter-state-tracker-dashboard" src="https://github.com/user-attachments/assets/4ed57406-311e-4c08-a405-c4b4799baaee" />
