@@ -12,9 +12,15 @@ use Symfony\Component\Routing\Attribute\Route;
 final class DashboardController extends AbstractController
 {
     #[Route('/', name: 'app_dashboard')]
-    public function index(QsoRepository $qsoRepository, PotaSpotService $potaSpotService): Response
-    {
-        // Calculate which states have been worked already and which are still needed
+    public function index(
+        QsoRepository $qsoRepository,
+        PotaSpotService $potaSpotService
+    ): Response {
+        // NOTE: Consider moving state + spot logic into a "DashboardDataBuilder service or similar.
+
+        // --------------------
+        // 1. DB: WORKED STATES
+        // --------------------
         $workedCounts = $qsoRepository->getWorkedStateCounts();
 
         $workedMap = [];
@@ -23,6 +29,9 @@ final class DashboardController extends AbstractController
             $workedMap[$row['state']->value] = (int) $row['qsoCount'];
         }
 
+        // --------------------
+        // 2. BUILD WORKED / NEEDED STATES
+        // --------------------
         $workedStates = [];
         $neededStates = [];
 
@@ -41,7 +50,9 @@ final class DashboardController extends AbstractController
             }
         }
 
-        // Get current POTA spots
+        // --------------------
+        // 3. API: POTA SPOTS
+        // --------------------
         $spots = $potaSpotService->getCurrentSpots();
 
         foreach ($spots as &$spot) {
@@ -49,10 +60,38 @@ final class DashboardController extends AbstractController
         }
         unset($spot);
 
+        // --------------------
+        // 4. GROUP SPOTS BY STATE
+        // --------------------
+        $spotsByState = [];
+
+        foreach ($spots as $spot) {
+            $stateValue = $spot['state']->value;
+            $spotsByState[$stateValue][] = $spot;
+        }
+
+        // --------------------
+        // 5. ATTACH SPOTS TO NEEDED STATES
+        // --------------------
+        foreach ($neededStates as &$state) {
+            $stateValue = $state['state']->value;
+
+            $state['spots'] = $spotsByState[$stateValue] ?? [];
+        }
+        unset($state);
+
+        // Prioritize states with active spots and
+        // descend sort by total # of active state spots
+        usort($neededStates, function ($a, $b) {
+            return count($b['spots']) <=> count($a['spots']);
+        });
+
+        // --------------------
+        // 6. RENDER
+        // --------------------
         return $this->render('dashboard/index.html.twig', [
             'workedStates' => $workedStates,
             'neededStates' => $neededStates,
-            'spots' => $spots,
         ]);
     }
 }

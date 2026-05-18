@@ -20,6 +20,11 @@
     <ul>
         <li><code>Worked</code> states with successful QSO counts</li>
         <li><code>Needed</code> states towards your 'Hunted All States' award</li>
+        <ul>
+            <li><strong>PLUS</strong>...information about <em>current</em> POTA spots in those states!</li>
+            <li>Callsign / Frequency / Mode</li>
+            <li>Descending sort by total # of current spots in each state</li>
+        </ul>
     </ul>
 
     <div class="row">
@@ -41,9 +46,12 @@
 
             <ul>
                 {% for item in neededStates %}
-                    <li>
-                        {{ item.state.label }}
-                    </li>
+                    <h3>{{ item.state.label }}</h3>
+                    <ul>
+                        {% for spot in item.spots %}
+                            <li>{{ spot.activator }} / {{ spot.frequency }} / {{ spot.mode }}</li>
+                        {% endfor %}
+                    </ul>
                 {% endfor %}
             </ul>
         </div>
